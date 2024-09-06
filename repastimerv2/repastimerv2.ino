@@ -101,7 +101,7 @@ void updatePhase() {
   int totalPixels = NUMPIXELS / 4;
   int litPixels = 0;
   uint32_t color = 0;
-  uint32_t backgroundColor = strip.Color(255, 255, 180);  // Jaune très pâle pour le fond
+  uint32_t backgroundColor = strip.Color(100, 100, 50);  // Jaune très pâle pour le fond
 
   switch (currentPhase) {
     case ENTREE:
@@ -163,7 +163,9 @@ void pulseEffect() {
   unsigned long currentTime = millis();
   if (currentTime - lastPulseTime >= 20) {  // Contrôler la vitesse de la pulsation
     pulseState = (pulseState + 5) % 510;  // Valeur cyclique de 0 à 255 et retour
+    int maxBrightness = 100;  // Ajuster cette valeur pour contrôler la luminosité maximale (100 au lieu de 255)
     int brightness = pulseState <= 255 ? pulseState : 510 - pulseState;  // Augmenter puis diminuer la luminosité
+    brightness = map(brightness, 0, 255, 0, maxBrightness);  // Limiter la luminosité à la valeur maxBrightness
     uint32_t pulseColor = strip.Color(brightness, 0, brightness);  // Couleur rose avec intensité variable
     for (int i = 0; i < NUMPIXELS; i++) {
       strip.setPixelColor(i, pulseColor);
@@ -172,6 +174,7 @@ void pulseEffect() {
     lastPulseTime = currentTime;
   }
 }
+
 
 void setup() {
   Serial.begin(115200);
